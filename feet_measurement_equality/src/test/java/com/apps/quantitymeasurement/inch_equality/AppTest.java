@@ -1,4 +1,4 @@
-package com.apps.quantitymeasurement.feet_measurement_equality;
+package com.apps.quantitymeasurement.inch_equality;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

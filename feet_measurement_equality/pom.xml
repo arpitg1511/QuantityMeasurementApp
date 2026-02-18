@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.apps.quantitymeasurement</groupId>
-  <artifactId>feet_measurement_equality</artifactId>
+  <artifactId>inch_equality</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>feet_measurement_equality</name>
+  <name>inch_equality</name>
   <url>http://maven.apache.org</url>
 
   <properties>
