@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.apps.quantitymeasurement</groupId>
-  <artifactId>inch_equality</artifactId>
+  <artifactId>generic_length</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>inch_equality</name>
+  <name>generic_length</name>
   <url>http://maven.apache.org</url>
 
   <properties>
