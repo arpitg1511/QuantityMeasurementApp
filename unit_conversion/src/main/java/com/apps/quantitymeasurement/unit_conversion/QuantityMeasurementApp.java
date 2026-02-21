@@ -1,5 +1,4 @@
-package com.apps.quantitymeasurement.unit_support;
-
+package com.apps.quantitymeasurement.unit_conversion;
 
 public class QuantityMeasurementApp {
 
@@ -19,6 +18,9 @@ class QuantityLength {
     private static final double TOLERANCE = 0.0001;
 
     public QuantityLength(double value, LengthUnit unit) {
+
+        if (!Double.isFinite(value))
+            throw new IllegalArgumentException("Invalid value");
 
         if (unit == null)
             throw new IllegalArgumentException("Unit cannot be null");
@@ -49,6 +51,7 @@ class QuantityLength {
 
     @Override
     public int hashCode() {
-        return Double.hashCode(convertToFeet());
+        long normalized = Math.round(convertToFeet() / TOLERANCE);
+        return Long.hashCode(normalized);
     }
 }

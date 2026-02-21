@@ -1,11 +1,11 @@
-package com.apps.quantitymeasurement.unit_support;
+package com.apps.quantitymeasurement.unit_conversion;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class QuantityMeasurementAppTest {
 
-    // Yard to Yard
+    // Yard to Yard - Same value
     @Test
     void testEquality_YardToYard_SameValue() {
         assertEquals(
@@ -14,6 +14,7 @@ class QuantityMeasurementAppTest {
         );
     }
 
+    // Yard to Yard - Different value
     @Test
     void testEquality_YardToYard_DifferentValue() {
         assertNotEquals(
@@ -31,6 +32,7 @@ class QuantityMeasurementAppTest {
         );
     }
 
+    // Feet to Yard
     @Test
     void testEquality_FeetToYard_EquivalentValue() {
         assertEquals(
@@ -57,7 +59,7 @@ class QuantityMeasurementAppTest {
         );
     }
 
-    // Centimeters to Feet (Non Equal)
+    // Centimeters to Feet - Not Equal
     @Test
     void testEquality_CentimetersToFeet_NonEquivalentValue() {
         assertNotEquals(
@@ -93,7 +95,7 @@ class QuantityMeasurementAppTest {
         assertNotEquals(yard, null);
     }
 
-    // Complex scenario
+    // Complex scenario - multiple conversions
     @Test
     void testEquality_AllUnits_ComplexScenario() {
 
@@ -106,10 +108,24 @@ class QuantityMeasurementAppTest {
         assertEquals(yard, inches);
     }
 
-    // Null unit test
+    // Null unit should throw exception
     @Test
     void testNullUnit_ThrowsException() {
         assertThrows(IllegalArgumentException.class,
                 () -> new QuantityLength(1.0, null));
+    }
+
+    // Invalid value (NaN)
+    @Test
+    void testInvalidValue_ThrowsException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new QuantityLength(Double.NaN, LengthUnit.FEET));
+    }
+
+    // Infinity value
+    @Test
+    void testInfinityValue_ThrowsException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new QuantityLength(Double.POSITIVE_INFINITY, LengthUnit.FEET));
     }
 }
