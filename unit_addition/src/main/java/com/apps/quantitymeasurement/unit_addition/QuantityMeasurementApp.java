@@ -1,4 +1,4 @@
-package com.apps.quantitymeasurement.unit_conversion;
+package com.apps.quantitymeasurement.unit_addition;
 
 public class QuantityMeasurementApp {
 
@@ -8,6 +8,12 @@ public class QuantityMeasurementApp {
         QuantityLength q2 = new QuantityLength(3.0, LengthUnit.FEET);
 
         System.out.println("Are equal? " + q1.equals(q2));
+        
+        QuantityLength result =
+                new QuantityLength(1.0, LengthUnit.FEET)
+                        .add(new QuantityLength(12.0, LengthUnit.INCHES));
+
+        System.out.println(result);  
     }
 }
 
@@ -53,5 +59,21 @@ class QuantityLength {
     public int hashCode() {
         long normalized = Math.round(convertToFeet() / TOLERANCE);
         return Long.hashCode(normalized);
+    }
+    
+    public QuantityLength add(QuantityLength other) {
+
+        if (other == null)
+            throw new IllegalArgumentException("Other length cannot be null");
+
+        double thisInFeet = this.convertToFeet();
+        double otherInFeet = other.convertToFeet();
+
+        double sumInFeet = thisInFeet + otherInFeet;
+
+        // convert back to unit of first operand
+        double resultValue = sumInFeet / unit.toFeet(1.0);
+
+        return new QuantityLength(resultValue, this.unit);
     }
 }
