@@ -1,11 +1,11 @@
-package com.apps.quantitymeasurement.unit_addition;
+package com.apps.quantitymeasurement.target_unit_addition;
 
 public enum LengthUnit {
 
     FEET(1.0),
     INCHES(1.0 / 12.0),
     YARDS(3.0),
-    CENTIMETERS(0.393701 / 12.0);
+    CENTIMETERS(1.0 / 30.48);
 
     private final double toFeetFactor;
 
@@ -16,5 +16,8 @@ public enum LengthUnit {
     public double toFeet(double value) {
         return value * toFeetFactor;
     }
-}
 
+    public double fromFeet(double feetValue) {
+        return feetValue / toFeetFactor;
+    }
+}
