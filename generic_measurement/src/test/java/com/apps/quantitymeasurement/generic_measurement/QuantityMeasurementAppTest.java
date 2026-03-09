@@ -1,10 +1,10 @@
-package com.apps.quantitymeasurement.weight_measurement;
+package com.apps.quantitymeasurement.generic_measurement;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import com.apps.quantitymeasurement.weight_measurement.LengthUnit;
-import com.apps.quantitymeasurement.weight_measurement.QuantityLength;
+import com.apps.quantitymeasurement.generic_measurement.LengthUnit;
+import com.apps.quantitymeasurement.generic_measurement.QuantityLength;
 
 import static org.junit.jupiter.api.Assertions.*;
 

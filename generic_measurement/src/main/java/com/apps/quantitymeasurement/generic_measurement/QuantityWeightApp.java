@@ -1,32 +1,36 @@
-package com.apps.quantitymeasurement.weight_measurement;
+package com.apps.quantitymeasurement.generic_measurement;
 
-public class QuantityMeasurementApp {
+public class QuantityWeightApp {
 
     public static void main(String[] args) {
 
-        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCHES);
+        QuantityWeight w1 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+        QuantityWeight w2 = new QuantityWeight(1000.0, WeightUnit.GRAM);
 
-        System.out.println(q1.convertTo(LengthUnit.INCHES));
+        System.out.println("Equality: " + w1.equals(w2));
 
         System.out.println(
-                q1.add(q2, LengthUnit.FEET)
+                w1.convertTo(WeightUnit.GRAM)
         );
 
         System.out.println(
-                new QuantityLength(36.0, LengthUnit.INCHES)
-                        .equals(new QuantityLength(1.0, LengthUnit.YARDS))
+                w1.add(w2)
+        );
+
+        System.out.println(
+                w1.add(w2, WeightUnit.POUND)
         );
     }
 }
 
-class QuantityLength {
+class QuantityWeight {
 
     private final double value;
-    private final LengthUnit unit;
-    private static final double EPSILON = 0.0001;
+    private final WeightUnit unit;
 
-    public QuantityLength(double value, LengthUnit unit) {
+    private static final double EPSILON = 0.000001;
+
+    public QuantityWeight(double value, WeightUnit unit) {
 
         if (!Double.isFinite(value))
             throw new IllegalArgumentException("Invalid value");
@@ -42,7 +46,7 @@ class QuantityLength {
         return unit.convertToBaseUnit(value);
     }
 
-    public QuantityLength convertTo(LengthUnit targetUnit) {
+    public QuantityWeight convertTo(WeightUnit targetUnit) {
 
         if (targetUnit == null)
             throw new IllegalArgumentException("Target unit cannot be null");
@@ -50,32 +54,34 @@ class QuantityLength {
         double base = unit.convertToBaseUnit(value);
         double converted = targetUnit.convertFromBaseUnit(base);
 
-        return new QuantityLength(converted, targetUnit);
+        return new QuantityWeight(converted, targetUnit);
     }
 
-    public QuantityLength add(QuantityLength other) {
+    public QuantityWeight add(QuantityWeight other) {
 
         if (other == null)
-            throw new IllegalArgumentException("Other length cannot be null");
+            throw new IllegalArgumentException("Other weight cannot be null");
 
         double sum = this.toBaseUnit() + other.toBaseUnit();
+
         double result = unit.convertFromBaseUnit(sum);
 
-        return new QuantityLength(result, unit);
+        return new QuantityWeight(result, unit);
     }
 
-    public QuantityLength add(QuantityLength other, LengthUnit targetUnit) {
+    public QuantityWeight add(QuantityWeight other, WeightUnit targetUnit) {
 
         if (other == null)
-            throw new IllegalArgumentException("Other length cannot be null");
+            throw new IllegalArgumentException("Other weight cannot be null");
 
         if (targetUnit == null)
             throw new IllegalArgumentException("Target unit cannot be null");
 
         double sum = this.toBaseUnit() + other.toBaseUnit();
+
         double result = targetUnit.convertFromBaseUnit(sum);
 
-        return new QuantityLength(result, targetUnit);
+        return new QuantityWeight(result, targetUnit);
     }
 
     @Override
@@ -83,8 +89,10 @@ class QuantityLength {
 
         if (this == obj) return true;
 
-        if (!(obj instanceof QuantityLength other))
+        if (obj == null || getClass() != obj.getClass())
             return false;
+
+        QuantityWeight other = (QuantityWeight) obj;
 
         return Math.abs(
                 this.toBaseUnit() - other.toBaseUnit()
@@ -93,7 +101,9 @@ class QuantityLength {
 
     @Override
     public int hashCode() {
+
         long normalized = Math.round(toBaseUnit() / EPSILON);
+
         return Long.hashCode(normalized);
     }
 
