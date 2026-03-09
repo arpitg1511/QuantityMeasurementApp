@@ -1,4 +1,4 @@
-package com.apps.quantitymeasurement.unit_addition;
+package com.apps.quantitymeasurement.weight_measurement;
 
 public enum LengthUnit {
 

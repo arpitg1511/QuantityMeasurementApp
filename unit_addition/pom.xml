@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.apps.quantitymeasurement</groupId>
-  <artifactId>unit_addition</artifactId>
+  <ent</artifact>weight_measurement</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>unit_addition</name>
+  <name>weight_measurement</name>
   <url>http://maven.apache.org</url>
 
   <properties>
