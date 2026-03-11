@@ -18,6 +18,14 @@ public class Quantity<U extends IMeasurable> {
         this.value = value;
         this.unit = unit;
     }
+    
+    public double getValue() {
+        return value;
+    }
+
+    public U getUnit() {
+        return unit;
+    }
 
     private double toBaseUnit() {
         return unit.convertToBaseUnit(value);
