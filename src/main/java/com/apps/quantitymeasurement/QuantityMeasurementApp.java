@@ -90,6 +90,26 @@ public class QuantityMeasurementApp {
         demonstrateSubtraction();
 
         demonstrateDivision();
+        
+        Quantity<TemperatureUnit> celsius =
+                new Quantity<>(0.0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> fahrenheit =
+                new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT);
+
+        System.out.println("0°C equals 32°F : " + celsius.equals(fahrenheit));
+
+        Quantity<TemperatureUnit> converted =
+                new Quantity<>(100.0, TemperatureUnit.CELSIUS)
+                        .convertTo(TemperatureUnit.FAHRENHEIT);
+
+        System.out.println("100°C in Fahrenheit: " + converted);
+
+        try {
+            celsius.add(fahrenheit);
+        } catch (UnsupportedOperationException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
 

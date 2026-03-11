@@ -25,19 +25,23 @@ public class Quantity<U extends IMeasurable> {
 
     public Quantity<U> convertTo(U targetUnit) {
 
-        if (targetUnit == null)
-            throw new IllegalArgumentException("Target unit cannot be null");
-
-        double base = unit.convertToBaseUnit(value);
-        double converted = targetUnit.convertFromBaseUnit(base);
-
-        converted = Math.round(converted * 100.0) / 100.0;
+        double baseValue = unit.convertToBaseUnit(value);
+        double converted = targetUnit.convertFromBaseUnit(baseValue);
 
         return new Quantity<>(converted, targetUnit);
     }
 
     public Quantity<U> add(Quantity<U> other) {
-        return add(other, this.unit);
+
+        unit.validateOperationSupport("addition");
+
+        double baseSum =
+                unit.convertToBaseUnit(value)
+                        + other.unit.convertToBaseUnit(other.value);
+
+        double result = unit.convertFromBaseUnit(baseSum);
+
+        return new Quantity<>(result, unit);
     }
 
     public Quantity<U> add(Quantity<U> other, U targetUnit) {
@@ -82,7 +86,16 @@ public class Quantity<U extends IMeasurable> {
     }
     
     public Quantity<U> subtract(Quantity<U> other) {
-        return subtract(other, this.unit);
+
+        unit.validateOperationSupport("subtraction");
+
+        double baseResult =
+                unit.convertToBaseUnit(value)
+                        - other.unit.convertToBaseUnit(other.value);
+
+        double result = unit.convertFromBaseUnit(baseResult);
+
+        return new Quantity<>(result, unit);
     }
 
     public Quantity<U> subtract(Quantity<U> other, U targetUnit) {
@@ -98,9 +111,15 @@ public class Quantity<U extends IMeasurable> {
     
     public double divide(Quantity<U> other) {
 
-        validateArithmeticOperands(other, null, false);
+        unit.validateOperationSupport("division");
 
-        return performBaseArithmetic(other, ArithmeticOperation.DIVIDE);
+        double base1 = unit.convertToBaseUnit(value);
+        double base2 = other.unit.convertToBaseUnit(other.value);
+
+        if (base2 == 0)
+            throw new ArithmeticException("Division by zero");
+
+        return base1 / base2;
     }
 
 	public double getValue() {
