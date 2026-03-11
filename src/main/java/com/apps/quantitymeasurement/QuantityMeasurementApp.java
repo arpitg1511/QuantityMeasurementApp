@@ -54,7 +54,6 @@ public class QuantityMeasurementApp {
 
         demonstrateEquality(length1, length2);
 
-<<<<<<< Updated upstream
         demonstrateConversion(length1, LengthUnit.INCHES);
 
         demonstrateAddition(length1, length2, LengthUnit.FEET);
@@ -70,6 +69,27 @@ public class QuantityMeasurementApp {
         demonstrateConversion(weight1, WeightUnit.GRAM);
 
         demonstrateAddition(weight1, weight2, WeightUnit.KILOGRAM);
+        
+        Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+        Quantity<VolumeUnit> v3 = new Quantity<>(1.0, VolumeUnit.GALLON);
+
+        System.out.println("Volume Equality:");
+        demonstrateEquality(v1, v2);
+
+        System.out.println("\nVolume Conversion:");
+        demonstrateConversion(v1, VolumeUnit.MILLILITRE);
+        demonstrateConversion(v3, VolumeUnit.LITRE);
+
+        System.out.println("\nVolume Addition:");
+        demonstrateAddition(v1, v2, VolumeUnit.LITRE);
+        
+        System.out.println("\nVolume Addition:");
+        demonstrateAddition(v1, v3, VolumeUnit.MILLILITRE);
+        
+        demonstrateSubtraction();
+
+        demonstrateDivision();
     }
 }
 
@@ -152,15 +172,6 @@ class QuantityLength {
 
     @Override
     public String toString() {
-        return "Quantity(" + value + ", " + unit + ")";
-=======
-        System.out.println("\nVolume Addition:");
-        demonstrateAddition(v1, v2, VolumeUnit.LITRE);
-        demonstrateAddition(v1, v3, VolumeUnit.MILLILITRE);
-        
-        demonstrateSubtraction();
-
-        demonstrateDivision();
->>>>>>> Stashed changes
+        return "Quantity(" + value + ", " + unit + ")";    
     }
 }
