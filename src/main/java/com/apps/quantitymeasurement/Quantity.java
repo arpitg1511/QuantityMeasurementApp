@@ -146,4 +146,14 @@ public class Quantity<U extends IMeasurable> {
 
         return baseValue1 / baseValue2;
     }
+
+	public double getValue() {
+		// TODO Auto-generated method stub
+		return value;
+	}
+
+	public Object getUnit() {
+		// TODO Auto-generated method stub
+		return unit;
+	}
 }
