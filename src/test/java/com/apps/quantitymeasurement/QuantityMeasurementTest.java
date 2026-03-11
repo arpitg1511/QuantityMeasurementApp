@@ -177,4 +177,153 @@ class QuantityMeasurementTest {
             );
         }
     }
+    
+ // Same unit subtraction
+    @Test
+    void testSubtraction_SameUnit_FeetMinusFeet() {
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(5.0, LengthUnit.FEET);
+
+        Quantity<LengthUnit> result = q1.subtract(q2);
+
+        assertEquals(5.0, result.getValue(), EPSILON);
+        assertEquals(LengthUnit.FEET, result.getUnit());
+    }
+
+    // Cross unit subtraction
+    @Test
+    void testSubtraction_CrossUnit_FeetMinusInches() {
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(6.0, LengthUnit.INCHES);
+
+        Quantity<LengthUnit> result = q1.subtract(q2);
+
+        assertEquals(9.5, result.getValue(), EPSILON);
+    }
+
+    // Explicit target unit
+    @Test
+    void testSubtraction_ExplicitTargetUnit_Inches() {
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(6.0, LengthUnit.INCHES);
+
+        Quantity<LengthUnit> result = q1.subtract(q2, LengthUnit.INCHES);
+
+        assertEquals(114.0, result.getValue(), EPSILON);
+        assertEquals(LengthUnit.INCHES, result.getUnit());
+    }
+
+    // Negative result
+    @Test
+    void testSubtraction_ResultNegative() {
+        Quantity<LengthUnit> q1 = new Quantity<>(5.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(10.0, LengthUnit.FEET);
+
+        Quantity<LengthUnit> result = q1.subtract(q2);
+
+        assertEquals(-5.0, result.getValue(), EPSILON);
+    }
+
+    // Zero result
+    @Test
+    void testSubtraction_ResultZero() {
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(120.0, LengthUnit.INCHES);
+
+        Quantity<LengthUnit> result = q1.subtract(q2);
+
+        assertEquals(0.0, result.getValue(), EPSILON);
+    }
+
+    // Division same unit
+    @Test
+    void testDivision_SameUnit() {
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(2.0, LengthUnit.FEET);
+
+        double result = q1.divide(q2);
+
+        assertEquals(5.0, result, EPSILON);
+    }
+
+    // Division cross unit
+    @Test
+    void testDivision_CrossUnit() {
+        Quantity<LengthUnit> q1 = new Quantity<>(24.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> q2 = new Quantity<>(2.0, LengthUnit.FEET);
+
+        double result = q1.divide(q2);
+
+        assertEquals(1.0, result, EPSILON);
+    }
+
+    // Ratio less than one
+    @Test
+    void testDivision_RatioLessThanOne() {
+        Quantity<LengthUnit> q1 = new Quantity<>(5.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(10.0, LengthUnit.FEET);
+
+        double result = q1.divide(q2);
+
+        assertEquals(0.5, result, EPSILON);
+    }
+
+    // Division by zero
+    @Test
+    void testDivision_ByZero() {
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(0.0, LengthUnit.FEET);
+
+        assertThrows(ArithmeticException.class, () -> q1.divide(q2));
+    }
+
+    // Null operand subtraction
+    @Test
+    void testSubtraction_NullOperand() {
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+
+        assertThrows(IllegalArgumentException.class, () -> q1.subtract(null));
+    }
+
+    // Null operand division
+    @Test
+    void testDivision_NullOperand() {
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+
+        assertThrows(IllegalArgumentException.class, () -> q1.divide(null));
+    }
+
+    // Cross category prevention
+    @Test
+    void testSubtraction_CrossCategory() {
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<WeightUnit> q2 = new Quantity<>(5.0, WeightUnit.KILOGRAM);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> q1.subtract((Quantity) q2));
+    }
+
+    // Immutability test
+    @Test
+    void testImmutability_AfterSubtract() {
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(5.0, LengthUnit.FEET);
+
+        q1.subtract(q2);
+
+        assertEquals(10.0, q1.getValue());
+        assertEquals(5.0, q2.getValue());
+    }
+
+    // Addition still works after refactor
+    @Test
+    void testAddition_BehaviorPreserved() {
+        Quantity<LengthUnit> q1 = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(12.0, LengthUnit.INCHES);
+
+        Quantity<LengthUnit> result = q1.add(q2);
+
+        assertEquals(2.0, result.getValue(), EPSILON);
+    }
+
 }
