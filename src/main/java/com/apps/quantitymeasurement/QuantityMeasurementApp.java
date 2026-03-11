@@ -23,6 +23,26 @@ public class QuantityMeasurementApp {
 
         System.out.println(q1 + " + " + q2 + " = " + q1.add(q2, targetUnit));
     }
+    
+    public static void demonstrateSubtraction() {
+
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(6.0, LengthUnit.INCHES);
+
+        Quantity<LengthUnit> result = q1.subtract(q2);
+
+        System.out.println("Subtraction Result: " + result);
+    }
+    
+    public static void demonstrateDivision() {
+
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(2.0, LengthUnit.FEET);
+
+        double result = q1.divide(q2);
+
+        System.out.println("Division Result: " + result);
+    }
 
     public static void main(String[] args) {
 
@@ -34,6 +54,7 @@ public class QuantityMeasurementApp {
 
         demonstrateEquality(length1, length2);
 
+<<<<<<< Updated upstream
         demonstrateConversion(length1, LengthUnit.INCHES);
 
         demonstrateAddition(length1, length2, LengthUnit.FEET);
@@ -132,5 +153,14 @@ class QuantityLength {
     @Override
     public String toString() {
         return "Quantity(" + value + ", " + unit + ")";
+=======
+        System.out.println("\nVolume Addition:");
+        demonstrateAddition(v1, v2, VolumeUnit.LITRE);
+        demonstrateAddition(v1, v3, VolumeUnit.MILLILITRE);
+        
+        demonstrateSubtraction();
+
+        demonstrateDivision();
+>>>>>>> Stashed changes
     }
 }
