@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import com.apps.quantitymeasurement.QuantityMeasurementApplication;
 import com.apps.quantitymeasurement.controller.QuantityMeasurementController;
-import com.apps.quantitymeasurement.entity.QuantityDTO;
 import com.apps.quantitymeasurement.exception.QuantityMeasurementException;
+import com.apps.quantitymeasurement.model.QuantityDTO;
 
-public class QuantityMeasurementAppTest {
+public class QuantityMeasurementApplicationTest {
 
 	private static final double EPSILON = 0.00001;
 
@@ -18,7 +18,7 @@ public class QuantityMeasurementAppTest {
 
 	@BeforeEach
 	void setup() {
-		controller = QuantityMeasurementApplication.getInstance().controller;
+		controller = QuantityMeasurementApplication.controller;
 	}
 
 	@Test

@@ -1,21 +1,25 @@
 package com.apps.quantitymeasurement.service;
 
-import com.apps.quantitymeasurement.entity.*;
-import com.apps.quantitymeasurement.exception.QuantityMeasurementException;
-import com.apps.quantitymeasurement.repository.IQuantityMeasurementRepository;
-import com.apps.quantitymeasurement.unit.IMeasurable;
-import com.apps.quantitymeasurement.unit.LengthUnit;
-import com.apps.quantitymeasurement.unit.TemperatureUnit;
-import com.apps.quantitymeasurement.unit.VolumeUnit;
-import com.apps.quantitymeasurement.unit.WeightUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+import com.apps.quantitymeasurement.exception.QuantityMeasurementException;
+import com.apps.quantitymeasurement.model.*;
+import com.apps.quantitymeasurement.repository.QuantityMeasurementDatabaseRepository;
+import com.apps.quantitymeasurement.unit.*;
+
+@Service
 public class QuantityMeasurementServiceImpl implements IQuantityMeasurementService {
 
-	private IQuantityMeasurementRepository repository;
+	private static final Logger logger = LoggerFactory.getLogger(QuantityMeasurementServiceImpl.class);
+
+	private QuantityMeasurementDatabaseRepository repository;
 	private static final double EPSILON = 0.00001;
 
-	public QuantityMeasurementServiceImpl(IQuantityMeasurementRepository repository) {
+	public QuantityMeasurementServiceImpl(QuantityMeasurementDatabaseRepository repository) {
 		this.repository = repository;
+		logger.info("Quantity Measurement Service initialized with repository : " + repository);
 	}
 
 	private enum Operation {
@@ -31,9 +35,6 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
 		QuantityModel<IMeasurable> thisModel = getQuantityModel(thisDTO);
 		QuantityModel<IMeasurable> thatModel = getQuantityModel(thatDTO);
-
-		validateArithmeticOperands(thisModel, thatModel);
-
 		double base1 = thisModel.getUnit().convertToBaseUnit(thisModel.getValue());
 		double base2 = thatModel.getUnit().convertToBaseUnit(thatModel.getValue());
 
@@ -62,15 +63,7 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 		repository.save(new QuantityMeasurementEntity(source, targetModel, Operation.CONVERSION.name(),
 				String.valueOf(convertedValue)));
 
-		String measurementType = thisDTO.getUnit().getMeasurementType();
-		System.out.println(sourceUnit.getMeasurementType() + " " + measurementType);
-		return switch (measurementType) {
-		case "LENGTH" -> QuantityDTO.ofLength(convertedValue, targetUnit.getUnitName());
-		case "WEIGHT" -> QuantityDTO.ofWeight(convertedValue, targetUnit.getUnitName());
-		case "VOLUME" -> QuantityDTO.ofVolume(convertedValue, targetUnit.getUnitName());
-		case "TEMPERATURE" -> QuantityDTO.ofTemperature(convertedValue, targetUnit.getUnitName());
-		default -> throw new QuantityMeasurementException("Invalid measurement type");
-		};
+		return new QuantityDTO(convertedValue, targetUnit.getUnitName(), sourceUnit.getMeasurementType());
 	}
 
 	@Override
@@ -138,7 +131,7 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 		repository.save(new QuantityMeasurementEntity(thisModel, thatModel, Operation.ARITHMETIC.name(),
 				String.valueOf(finalValue)));
 
-		return new QuantityDTO(finalValue, targetDTO.getUnit());
+		return new QuantityDTO(finalValue, targetDTO.getUnit(), targetDTO.getMeasurementType());
 	}
 
 	private <U extends IMeasurable> void validateArithmeticOperands(QuantityModel<U> q1, QuantityModel<U> q2) {
@@ -161,29 +154,34 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
 	private QuantityModel<IMeasurable> getQuantityModel(QuantityDTO dto) {
 
-		QuantityDTO.IMeasurableUnit dtoUnit = dto.getUnit();
-		String type = dtoUnit.getMeasurementType();
-		String unitName = dtoUnit.getUnitName();
+		String type = dto.getMeasurementType();
+		String unitName = dto.getUnit();
 
 		IMeasurable measurableUnit;
 
 		switch (type) {
-		case "LENGTH" -> {
+
+		case "LengthUnit" -> {
 			measurableUnit = LengthUnit.valueOf(unitName);
 		}
-		case "WEIGHT" -> {
+
+		case "WeightUnit" -> {
 			measurableUnit = WeightUnit.valueOf(unitName);
 		}
-		case "VOLUME" -> {
+
+		case "VolumeUnit" -> {
 			measurableUnit = VolumeUnit.valueOf(unitName);
 		}
-		case "TEMPERATURE" -> {
+
+		case "TemperatureUnit" -> {
 			measurableUnit = TemperatureUnit.valueOf(unitName);
 		}
+
 		default -> {
 			throw new QuantityMeasurementException("Invalid measurement type");
 		}
 		}
+
 		return new QuantityModel<>(dto.getValue(), measurableUnit);
 	}
 }
