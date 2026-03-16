@@ -34,19 +34,6 @@
 			<version>5.1.0</version>
 		</dependency>
 
-		<!-- Logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.36</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.2.11</version>
-		</dependency>
-
 		<!-- JUnit 5 -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -62,7 +49,11 @@
 			<version>4.8.1</version>
 			<scope>test</scope>
 		</dependency>
-
+		
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 	</dependencies>
 	
 	<!-- Build Plugins -->
@@ -123,6 +114,11 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
 
 			<!-- Distribution Jar -->
 			<plugin>
@@ -160,6 +156,12 @@
 		</resources>
 
 	</build>
-
-  
+	
+	<parent>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-parent</artifactId>
+	    <version>3.2.5</version>
+	    <relativePath/>
+	</parent>
+	
 </project>

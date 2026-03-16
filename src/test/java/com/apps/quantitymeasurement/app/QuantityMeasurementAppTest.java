@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.apps.quantitymeasurement.QuantityMeasurementApp;
+import com.apps.quantitymeasurement.QuantityMeasurementApplication;
 import com.apps.quantitymeasurement.controller.QuantityMeasurementController;
 import com.apps.quantitymeasurement.entity.QuantityDTO;
 import com.apps.quantitymeasurement.exception.QuantityMeasurementException;
@@ -18,7 +18,7 @@ public class QuantityMeasurementAppTest {
 
 	@BeforeEach
 	void setup() {
-		controller = QuantityMeasurementApp.getInstance().controller;
+		controller = QuantityMeasurementApplication.getInstance().controller;
 	}
 
 	@Test
