@@ -1,6 +1,6 @@
 package com.apps.quantitymeasurement;
 
-import com.apps.quantitymeasurement.entity.WeightUnit;
+import com.apps.quantitymeasurement.unit.WeightUnit;
 
 public class QuantityWeightApp {
 

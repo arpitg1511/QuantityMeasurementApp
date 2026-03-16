@@ -3,6 +3,11 @@ package com.apps.quantitymeasurement.service;
 import com.apps.quantitymeasurement.entity.*;
 import com.apps.quantitymeasurement.exception.QuantityMeasurementException;
 import com.apps.quantitymeasurement.repository.IQuantityMeasurementRepository;
+import com.apps.quantitymeasurement.unit.IMeasurable;
+import com.apps.quantitymeasurement.unit.LengthUnit;
+import com.apps.quantitymeasurement.unit.TemperatureUnit;
+import com.apps.quantitymeasurement.unit.VolumeUnit;
+import com.apps.quantitymeasurement.unit.WeightUnit;
 
 public class QuantityMeasurementServiceImpl implements IQuantityMeasurementService {
 

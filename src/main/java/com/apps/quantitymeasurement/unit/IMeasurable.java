@@ -1,5 +1,5 @@
 
-package com.apps.quantitymeasurement.entity;
+package com.apps.quantitymeasurement.unit;
 
 @FunctionalInterface
 interface SupportsArithmetic {

@@ -1,221 +1,118 @@
 package com.apps.quantitymeasurement.app;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.apps.quantitymeasurement.entity.LengthUnit;
-import com.apps.quantitymeasurement.entity.Quantity;
-import com.apps.quantitymeasurement.entity.VolumeUnit;
-import com.apps.quantitymeasurement.entity.WeightUnit;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.apps.quantitymeasurement.QuantityMeasurementApp;
+import com.apps.quantitymeasurement.controller.QuantityMeasurementController;
+import com.apps.quantitymeasurement.entity.QuantityDTO;
+import com.apps.quantitymeasurement.exception.QuantityMeasurementException;
 
 public class QuantityMeasurementAppTest {
 
-    private static final double EPSILON = 0.0001;
+	private static final double EPSILON = 0.00001;
 
-    /* -----------------------------
-       SUBTRACTION TESTS
-    ------------------------------*/
+	private QuantityMeasurementController controller;
 
-    @Test
-    void testSubtraction_SameUnit_FeetMinusFeet() {
-        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<LengthUnit> q2 = new Quantity<>(5.0, LengthUnit.FEET);
+	@BeforeEach
+	void setup() {
+		controller = QuantityMeasurementApp.getInstance().controller;
+	}
 
-        Quantity<LengthUnit> result = q1.subtract(q2);
+	@Test
+	void testLengthEquality() {
+		QuantityDTO feet = QuantityDTO.ofLength(1, "FEET");
+		QuantityDTO inches = QuantityDTO.ofLength(12, "INCHES");
 
-        assertEquals(5.0, result.getValue(), EPSILON);
-        assertEquals(LengthUnit.FEET, result.getUnit());
-    }
+		assertTrue(controller.performComparison(feet, inches));
+	}
 
-    @Test
-    void testSubtraction_SameUnit_LitreMinusLitre() {
-        Quantity<VolumeUnit> q1 = new Quantity<>(10.0, VolumeUnit.LITRE);
-        Quantity<VolumeUnit> q2 = new Quantity<>(3.0, VolumeUnit.LITRE);
+	@Test
+	void testWeightEquality() {
+		QuantityDTO kg = QuantityDTO.ofWeight(1, "KILOGRAM");
+		QuantityDTO gram = QuantityDTO.ofWeight(1000, "GRAM");
 
-        Quantity<VolumeUnit> result = q1.subtract(q2);
+		assertTrue(controller.performComparison(kg, gram));
+	}
 
-        assertEquals(7.0, result.getValue(), EPSILON);
-    }
+	@Test
+	void testVolumeEquality() {
+		QuantityDTO litre = QuantityDTO.ofVolume(1, "LITRE");
+		QuantityDTO gallon = QuantityDTO.ofVolume(0.264172, "GALLON");
 
-    @Test
-    void testSubtraction_CrossUnit_FeetMinusInches() {
-        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<LengthUnit> q2 = new Quantity<>(6.0, LengthUnit.INCHES);
+		assertTrue(controller.performComparison(litre, gallon));
+	}
 
-        Quantity<LengthUnit> result = q1.subtract(q2);
+	@Test
+	void testConversion() {
+		QuantityDTO feet = QuantityDTO.ofLength(1, "FEET");
 
-        assertEquals(9.5, result.getValue(), EPSILON);
-    }
+		QuantityDTO result = controller.performConversion(feet, "INCHES");
 
-    @Test
-    void testSubtraction_ExplicitTargetUnit_Inches() {
-        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<LengthUnit> q2 = new Quantity<>(6.0, LengthUnit.INCHES);
+		assertEquals(12.0, result.getValue(), EPSILON);
+		assertEquals("INCHES", result.getUnit().getUnitName());
+	}
 
-        Quantity<LengthUnit> result = q1.subtract(q2, LengthUnit.INCHES);
+	@Test
+	void testAdditionDefaultUnit() {
+		QuantityDTO yards = QuantityDTO.ofLength(2, "YARDS");
+		QuantityDTO feet = QuantityDTO.ofLength(3, "FEET");
 
-        assertEquals(114.0, result.getValue(), EPSILON);
-    }
+		QuantityDTO result = controller.performAddition(yards, feet);
 
-    @Test
-    void testSubtraction_ResultingInNegative() {
-        Quantity<LengthUnit> q1 = new Quantity<>(5.0, LengthUnit.FEET);
-        Quantity<LengthUnit> q2 = new Quantity<>(10.0, LengthUnit.FEET);
+		assertEquals(3.0, result.getValue(), EPSILON);
+		assertEquals("YARDS", result.getUnit().getUnitName());
+	}
+	
+	@Test
+	void testDivision() {
+		QuantityDTO inches = QuantityDTO.ofLength(24, "INCHES");
+		QuantityDTO feet = QuantityDTO.ofLength(2, "FEET");
 
-        Quantity<LengthUnit> result = q1.subtract(q2);
+		double result = controller.performDivision(inches, feet);
 
-        assertEquals(-5.0, result.getValue(), EPSILON);
-    }
+		assertEquals(1.0, result, EPSILON);
+	}
 
-    @Test
-    void testSubtraction_ResultingInZero() {
-        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<LengthUnit> q2 = new Quantity<>(120.0, LengthUnit.INCHES);
+	@Test
+	void testDivisionByZero() {
+		QuantityDTO q1 = QuantityDTO.ofLength(10, "FEET");
+		QuantityDTO q2 = QuantityDTO.ofLength(0, "FEET");
 
-        Quantity<LengthUnit> result = q1.subtract(q2);
+		QuantityMeasurementException exception = assertThrows(QuantityMeasurementException.class,
+				() -> controller.performDivision(q1, q2));
 
-        assertEquals(0.0, result.getValue(), EPSILON);
-    }
+		assertEquals("Division by zero not allowed", exception.getMessage());
+	}
 
-    @Test
-    void testSubtraction_WithZeroOperand() {
-        Quantity<LengthUnit> q1 = new Quantity<>(5.0, LengthUnit.FEET);
-        Quantity<LengthUnit> q2 = new Quantity<>(0.0, LengthUnit.INCHES);
+	@Test
+	void testTemperatureConversion() {
+		QuantityDTO celsius = QuantityDTO.ofTemperature(0, "CELSIUS");
 
-        Quantity<LengthUnit> result = q1.subtract(q2);
+		QuantityDTO result = controller.performConversion(celsius, "FAHRENHEIT");
 
-        assertEquals(5.0, result.getValue(), EPSILON);
-    }
+		assertEquals(32.0, result.getValue(), EPSILON);
+	}
 
-    @Test
-    void testSubtraction_NonCommutative() {
-        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<LengthUnit> q2 = new Quantity<>(5.0, LengthUnit.FEET);
+	@Test
+	void testTemperatureUnsupportedAddition() {
+		QuantityDTO t1 = QuantityDTO.ofTemperature(30, "CELSIUS");
+		QuantityDTO t2 = QuantityDTO.ofTemperature(20, "CELSIUS");
 
-        Quantity<LengthUnit> r1 = q1.subtract(q2);
-        Quantity<LengthUnit> r2 = q2.subtract(q1);
+		QuantityMeasurementException exception = assertThrows(QuantityMeasurementException.class,
+				() -> controller.performAddition(t1, t2));
 
-        assertEquals(5.0, r1.getValue(), EPSILON);
-        assertEquals(-5.0, r2.getValue(), EPSILON);
-    }
+		assertTrue(exception.getMessage().contains("not allowed"));
+	}
 
-    @Test
-    void testSubtraction_NullOperand() {
-        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+	@Test
+	void testCrossCategoryComparison() {
+		QuantityDTO length = QuantityDTO.ofLength(1, "FEET");
+		QuantityDTO weight = QuantityDTO.ofWeight(1, "KILOGRAM");
 
-        assertThrows(IllegalArgumentException.class, () -> q1.subtract(null));
-    }
-
-    /* -----------------------------
-       DIVISION TESTS
-    ------------------------------*/
-
-    @Test
-    void testDivision_SameUnit_FeetDividedByFeet() {
-        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<LengthUnit> q2 = new Quantity<>(2.0, LengthUnit.FEET);
-
-        double result = q1.divide(q2);
-
-        assertEquals(5.0, result, EPSILON);
-    }
-
-    @Test
-    void testDivision_SameUnit_LitreDividedByLitre() {
-        Quantity<VolumeUnit> q1 = new Quantity<>(10.0, VolumeUnit.LITRE);
-        Quantity<VolumeUnit> q2 = new Quantity<>(5.0, VolumeUnit.LITRE);
-
-        double result = q1.divide(q2);
-
-        assertEquals(2.0, result, EPSILON);
-    }
-
-    @Test
-    void testDivision_CrossUnit_InchesDividedByFeet() {
-        Quantity<LengthUnit> q1 = new Quantity<>(24.0, LengthUnit.INCHES);
-        Quantity<LengthUnit> q2 = new Quantity<>(2.0, LengthUnit.FEET);
-
-        double result = q1.divide(q2);
-
-        assertEquals(1.0, result, EPSILON);
-    }
-
-    @Test
-    void testDivision_RatioGreaterThanOne() {
-        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<LengthUnit> q2 = new Quantity<>(2.0, LengthUnit.FEET);
-
-        double result = q1.divide(q2);
-
-        assertEquals(5.0, result, EPSILON);
-    }
-
-    @Test
-    void testDivision_RatioLessThanOne() {
-        Quantity<LengthUnit> q1 = new Quantity<>(5.0, LengthUnit.FEET);
-        Quantity<LengthUnit> q2 = new Quantity<>(10.0, LengthUnit.FEET);
-
-        double result = q1.divide(q2);
-
-        assertEquals(0.5, result, EPSILON);
-    }
-
-    @Test
-    void testDivision_RatioEqualToOne() {
-        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<LengthUnit> q2 = new Quantity<>(10.0, LengthUnit.FEET);
-
-        double result = q1.divide(q2);
-
-        assertEquals(1.0, result, EPSILON);
-    }
-
-    @Test
-    void testDivision_ByZero() {
-        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<LengthUnit> q2 = new Quantity<>(0.0, LengthUnit.FEET);
-
-        assertThrows(ArithmeticException.class, () -> q1.divide(q2));
-    }
-
-    @Test
-    void testDivision_NonCommutative() {
-        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<LengthUnit> q2 = new Quantity<>(5.0, LengthUnit.FEET);
-
-        double r1 = q1.divide(q2);
-        double r2 = q2.divide(q1);
-
-        assertEquals(2.0, r1, EPSILON);
-        assertEquals(0.5, r2, EPSILON);
-    }
-
-    @Test
-    void testDivision_NullOperand() {
-        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
-
-        assertThrows(IllegalArgumentException.class, () -> q1.divide(null));
-    }
-
-    /* -----------------------------
-       CROSS CATEGORY PROTECTION
-    ------------------------------*/
-
-    @Test
-    void testSubtraction_CrossCategory() {
-        Quantity<LengthUnit> length = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<WeightUnit> weight = new Quantity<>(5.0, WeightUnit.KILOGRAM);
-
-        assertThrows(IllegalArgumentException.class, () -> length.subtract((Quantity) weight));
-    }
-
-    @Test
-    void testDivision_CrossCategory() {
-        Quantity<LengthUnit> length = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<WeightUnit> weight = new Quantity<>(5.0, WeightUnit.KILOGRAM);
-
-        assertThrows(IllegalArgumentException.class, () -> length.divide((Quantity) weight));
-    }
+		assertThrows(QuantityMeasurementException.class, () -> controller.performComparison(length, weight));
+	}
 
 }
