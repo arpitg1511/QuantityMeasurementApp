@@ -1,6 +1,12 @@
-package com.apps.quantitymeasurement;
+package com.apps.quantitymeasurement.app;
 
 import org.junit.jupiter.api.Test;
+
+import com.apps.quantitymeasurement.entity.LengthUnit;
+import com.apps.quantitymeasurement.entity.Quantity;
+import com.apps.quantitymeasurement.entity.VolumeUnit;
+import com.apps.quantitymeasurement.entity.WeightUnit;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class QuantityMeasurementAppTest {

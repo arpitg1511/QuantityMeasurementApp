@@ -1,5 +1,7 @@
 package com.apps.quantitymeasurement;
 
+import com.apps.quantitymeasurement.entity.WeightUnit;
+
 public class QuantityWeightApp {
 
     public static void main(String[] args) {
