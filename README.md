@@ -18,7 +18,7 @@ The application provides functionality for:
 - ✅ N-Tier architecture implementation
 - ✅ Database integration with JDBC
 - ✅ REST API with Spring Boot
-
+- ✅ Spring Security with OAuth 2.0 authentication
 ---
 
 ## Repository Structure & Branches
@@ -173,6 +173,19 @@ The application provides functionality for:
   - API documentation
   - Enhanced scalability and maintainability
 
+#### 📋 **feature/UC18-Spring-Security-With-OAuth**
+- **Purpose**: Implement Spring Security with OAuth 2.0 authentication
+- **Features**:
+  - OAuth 2.0 authentication provider integration
+  - Spring Security configuration and setup
+  - User authentication and authorization
+  - JWT token-based authentication
+  - Role-based access control (RBAC)
+  - Secure API endpoints protection
+  - Third-party OAuth provider support (Google, GitHub, etc.)
+  - Session management and token refresh
+  - User credentials encryption and storage
+  
 ---
 
 ## Technology Stack
@@ -182,6 +195,8 @@ The application provides functionality for:
 - **Database**: JDBC compatible (MySQL/PostgreSQL)
 - **Framework**: Spring Boot (UC17+)
 - **Testing**: JUnit
+- **Security**: Spring Security with OAuth 2.0
+
 
 ---
 
@@ -190,7 +205,7 @@ The application provides functionality for:
 ### Prerequisites
 - Java 8 or higher
 - Maven 3.6.0 or higher
-- MySQL/PostgreSQL (for database features)
+- H2 (development), MySQL/PostgreSQL (production)
 
 ### Installation
 
