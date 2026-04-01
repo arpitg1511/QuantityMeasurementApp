@@ -66,7 +66,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 //                        "\",\"email\":\"" + appUser.getEmail() +
 //                        "\",\"name\":\"" + appUser.getName() + "\"}"
 //        );
-        // Redirect to your frontend with the token
-        response.sendRedirect("http://localhost:4200/oauth2/success?token=" + token);
+        // Redirect to your Vite/React frontend with the token and user info
+        response.sendRedirect("http://localhost:5173/auth/callback?token=" + token + 
+            "&name=" + appUser.getName() + 
+            "&email=" + appUser.getEmail());
     }
 }
