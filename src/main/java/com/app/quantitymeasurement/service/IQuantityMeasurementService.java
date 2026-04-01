@@ -14,5 +14,6 @@ public interface IQuantityMeasurementService {
     List<QuantityMeasurementDTO> getHistoryByOperation(String operation);
     List<QuantityMeasurementDTO> getHistoryByType(String measurementType);
     List<QuantityMeasurementDTO> getErrorHistory();
+    List<QuantityMeasurementDTO> getAllHistory();
     long getCountByOperation(String operation);
 }

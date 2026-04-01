@@ -77,6 +77,12 @@ public class QuantityMeasurementController {
         return ResponseEntity.ok(service.getErrorHistory());
     }
 
+    @GetMapping("/history")
+    @Operation(summary = "Get all operation history")
+    public ResponseEntity<List<QuantityMeasurementDTO>> getAllHistory() {
+        return ResponseEntity.ok(service.getAllHistory());
+    }
+
     @GetMapping("/count/{operation}")
     @Operation(summary = "Get count of operations by type")
     public ResponseEntity<Long> getCountByOperation(@PathVariable String operation) {
