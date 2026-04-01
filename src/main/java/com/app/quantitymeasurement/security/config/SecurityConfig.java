@@ -49,8 +49,16 @@ public class SecurityConfig {
                                 "/api-docs/**",
                                 "/actuator/**"
                         ).permitAll()
-                        .requestMatchers("/api/v1/quantities/**").authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers(
+                                "/api/v1/quantities/compare",
+                                "/api/v1/quantities/convert",
+                                "/api/v1/quantities/add",
+                                "/api/v1/quantities/subtract",
+                                "/api/v1/quantities/divide"
+                        ).permitAll()
+                        .requestMatchers("/api/v1/quantities/history", "/api/v1/quantities/history/**").authenticated()
+                        .requestMatchers("/api/v1/quantities/count/**").authenticated()
+                        .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.frameOptions(frame -> frame.disable())) // for H2 console
                 .oauth2Login(oauth -> oauth
