@@ -11,6 +11,7 @@ public class QuantityMeasurementAppApplication {
         // Explicitly load .env variables into system properties for Spring Boot
         Dotenv dotenv = Dotenv.configure()
                 .directory("src/main/resources")
+                .ignoreIfMissing()
                 .load();
 
         dotenv.entries().forEach(entry -> 
