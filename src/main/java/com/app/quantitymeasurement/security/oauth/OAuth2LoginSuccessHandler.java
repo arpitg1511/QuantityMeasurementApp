@@ -28,6 +28,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         this.jwtService = jwtService;
     }
 
+    @org.springframework.beans.factory.annotation.Value("${FRONTEND_URL:http://localhost:5173}")
+    private String frontendUrl;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
@@ -59,15 +62,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         );
 
         String token = jwtService.generateToken(userDetails);
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
-//        response.getWriter().write(
-//                "{\"token\":\"" + token +
-//                        "\",\"email\":\"" + appUser.getEmail() +
-//                        "\",\"name\":\"" + appUser.getName() + "\"}"
-//        );
-        // Redirect to your Vite/React frontend with the token and user info
-        response.sendRedirect("http://localhost:5173/auth/callback?token=" + token + 
+        
+        // Use the injected frontendUrl for the redirect
+        response.sendRedirect(frontendUrl + "/auth/callback?token=" + token + 
             "&name=" + appUser.getName() + 
             "&email=" + appUser.getEmail());
     }
